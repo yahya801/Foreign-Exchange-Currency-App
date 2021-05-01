@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import Header from './Header';
-import Start from './Start'
+import BaseCurrency from './BaseCurrency'
 import {
   View,
   ActivityIndicator,
@@ -19,9 +19,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Header />
-      
-      <Start />
-
+      <BaseCurrency />
     </View>
   );
 };

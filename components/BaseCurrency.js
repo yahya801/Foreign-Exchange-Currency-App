@@ -16,50 +16,45 @@ import {
 } from 'react-native-responsive-screen';
 
 import CurrencyList from './CurrencyList';
-const Start = () => {
-  const [amount, Setamount] = useState('1');
-
-  const curriencies = [
-    {
-      symbol: 'IDR',
-      des: 'IDR - Indonesian Ruppee',
-    },
-    {
-      symbol: 'EUR',
-      des: 'EUR - Euro',
-    },
-  ];
-
+const BaseCurrency = () => {
+  const [amount, setAmount] = useState('1');
   const handleInputChange = text => {
     if (/^\d+$/.test(text)) {
-      Setamount(text);
+      setAmount(text);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputbox}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.inputBox}>
         <View style={{margin: 10}}>
-          <Text>USD - United States Dollar</Text>
+          <Text style={{color: '#ffffff'}}>EUR - Euro</Text>
         </View>
 
         <View style={styles.inline}>
           <View>
-            <Text>USD</Text>
+            <Text style={{fontSize: 18, alignSelf: 'center', color: '#ffffff'}}>
+              EUR
+            </Text>
           </View>
 
-          <View style={styles.textbox}>
+          <View style={styles.textBox}>
             <TextInput
+              //   mode="outlined"
               style={styles.inputView}
-              label="Enter Amount"
+              placeholder="Enter Amount"
+              //   selectionColor="red"
               value={amount}
+              backgroundColor="white"
               onChangeText={no => handleInputChange(no)}
+              underlineColor="null"
             />
           </View>
         </View>
       </View>
-      <CurrencyList conversionamount={amount} />
-    </View>
+
+      <CurrencyList conversionAmount={amount} />
+    </ScrollView>
   );
 };
 
@@ -69,15 +64,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  inputbox: {
+  inputBox: {
     width: wp('90%'),
-    height: hp('20%'),
+    height: hp('25%'),
     borderWidth: 3,
+    borderColor: 'white',
     padding: 10,
   },
-  textbox: {
+  textBox: {
     flexDirection: 'row',
     marginLeft: 'auto',
+    // backgroundColor: 'red'
   },
   inputView: {
     width: wp('60%'),
@@ -87,9 +84,9 @@ const styles = StyleSheet.create({
   inline: {
     // flex: 1,
     flexDirection: 'row',
-    padding: 10
+    padding: 10,
     // margin: 10,
   },
 });
 
-export default Start;
+export default BaseCurrency;

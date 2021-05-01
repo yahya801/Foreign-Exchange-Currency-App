@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
-import Header from './Header';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
   View,
@@ -16,29 +16,25 @@ import {
 } from 'react-native-responsive-screen';
 import uuid from 'react-native-uuid';
 const axios = require('axios').default;
-const currencyList = ({conversionamount}) => {
-  const [list, Setlist] = useState([]);
-  const [description, Setdescripion] = useState('');
-  const [currency, Setcurrency] = useState('');
+const currencyList = ({conversionAmount}) => {
+  const [list, setList] = useState([]);
+  const [description, setDescripion] = useState('');
+  const [currency, setCurrency] = useState('');
   const [showDropDown, setShowDropDown] = useState(false);
-  const [submit, Setsubmit] = useState(true);
-  const basecurrency = [
-    {
-      symbol: 'USD',
-      des: 'USD - United States Dollar',
-    },
-  ];
+  const [submit, setSubmit] = useState(true);
   const currencyList = [
     {value: 'IDR', label: 'IDR - Indonesian Rupaih'},
     {value: 'GBP', label: 'GBP - British Pound'},
     {value: 'SGD', label: 'SGD - Singaporean Dollar'},
+    {value: 'JPY', label: 'JPY - Japanese Yen'},
+    {value: 'PKR', label: 'PKR - Pakistani Ruppee'},
   ];
-  const currencyselect = item => {
-    Setcurrency(item.value);
-    Setdescripion(item.label);
-    Setsubmit(false);
+  const currencySelect = item => {
+    setCurrency(item.value);
+    setDescripion(item.label);
+    setSubmit(false);
   };
-  const currencysubmit = () => {
+  const currencySubmit = () => {
     apicurrency(currency);
   };
   const apicurrency = async curr => {
@@ -50,10 +46,10 @@ const currencyList = ({conversionamount}) => {
           curr,
       );
       exchange = response.data.rates[curr];
-      const convert = exchange * conversionamount;
+      const convert = exchange * conversionAmount;
       // console.log(response.data.rates[curr])
       if ((list.lengh = 0))
-        Setlist([
+        setList([
           {
             id: uuid.v4(),
             code: currency,
@@ -63,7 +59,7 @@ const currencyList = ({conversionamount}) => {
           },
         ]);
       else
-        Setlist([
+        setList([
           ...list,
           {
             id: uuid.v4(),
@@ -73,41 +69,51 @@ const currencyList = ({conversionamount}) => {
             desc: description,
           },
         ]);
-      // let exchange = ;
     } catch (err) {
-      // Handle Error Here
       console.error(err);
     }
   };
   const handleRemove = id => {
     const values = [...list];
-    var removeindex = list
+    var removeIndex = list
       .map(function (Event) {
         return Event.id;
       })
       .indexOf(id);
-    values.splice(removeindex, 1);
-    Setlist(values);
+    values.splice(removeIndex, 1);
+    setList(values);
+  };
+  const thousands_Separators = num => {
+    var num_parts = num.toString().split('.');
+    num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return num_parts.join('.');
   };
 
   return (
-    <View style={styles.firstcontainer}>
+    <View style={styles.firstContainer}>
       {list.map(count => (
         <View key={count.id} style={styles.container}>
-          <View>
-            <Text>{count.code}</Text>
-            <Text>{count.desc}</Text>
-            <Text>
-              1 {count.code} = {count.code} {count.rate}
+          <View style={{width: wp('50%')}}>
+            <Text style={{fontSize: 18, color: '#ffffff'}}>{count.code}</Text>
+            <Text style={{color: '#ffffff'}}>{count.desc}</Text>
+            <Text style={{fontSize: 18, color: '#ffffff'}}>
+              1 EUR = {count.code} {count.rate.toFixed(2)}
             </Text>
           </View>
-          <View>
-            <Text>{count.converted}</Text>
+          <View style={{width: wp('20%')}}>
+            <Text style={{fontSize: 16, color: '#ffffff'}}>
+              {thousands_Separators(count.converted.toFixed(2))}
+            </Text>
           </View>
-          <View style={{alignItems: 'center', marginLeft: 'auto'}}>
-            <Button
-              icon="delete"
-              onPress={() => handleRemove(count.id)}></Button>
+          <View
+            style={{
+              alignItems: 'center',
+              marginLeft: 'auto',
+              width: wp('10%'),
+            }}>
+            <Button onPress={() => handleRemove(count.id)}>
+              <Icon name="trash" size={24} color="#fff" />
+            </Button>
           </View>
         </View>
       ))}
@@ -122,12 +128,13 @@ const currencyList = ({conversionamount}) => {
             justifyContent: 'flex-start',
           }}
           dropDownStyle={{backgroundColor: '#fafafa'}}
-          onChangeItem={item => currencyselect(item)}
+          onChangeItem={item => currencySelect(item)}
         />
         <Button
           disabled={submit}
           // loading={submit ? false : true}
-          onPress={() => currencysubmit()}>
+          color="white"
+          onPress={() => currencySubmit()}>
           Press me
         </Button>
       </View>
@@ -135,9 +142,8 @@ const currencyList = ({conversionamount}) => {
   );
 };
 const styles = StyleSheet.create({
-  firstcontainer: {
+  firstContainer: {
     flex: 1,
-    // flexDirection: 'row',
   },
   container: {
     // flex: 1,
@@ -147,6 +153,7 @@ const styles = StyleSheet.create({
     width: wp('90%'),
     height: hp('15%'),
     borderWidth: 3,
+    borderColor: 'white'
   },
   inline: {
     flex: 1,
