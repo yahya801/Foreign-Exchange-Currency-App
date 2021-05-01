@@ -8,9 +8,11 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
+import Home from './components/Home'
 const App = () => {
-  return <Text>Hello</Text>;
+  return (
+    <Home />
+  )
 };
 
 const styles = StyleSheet.create({
